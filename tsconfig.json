@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "types": ["jest", "@testing-library/jest-dom"],
+    "lib": ["dom", "esnext"],
+    "jsx": "react",
+    "baseUrl": ".",
+    "paths": {},
+    "module": "esnext",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "skipLibCheck": true
+  },
+  "include": ["./src/**/*", "./gatsby-node.ts", "./gatsby-config.ts", "./plugins/**/*", "./declarations.d.ts"]
+}

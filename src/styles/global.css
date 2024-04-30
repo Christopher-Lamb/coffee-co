@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --five: 1215.98px;
+  --four: 751.53px;
+  --three: 464.48px;
+  --two: 287.07px;
+  --xl: 177.42px;
+  --lg: 109.66px;
+  --md: 67.77px;
+  --sm: 41.89px;
+  --xsm: 25.88px;
+  --xsm2: 16px;
+  --xsm3: 9.89px;
+  --primary: #021024;
+  --primary-lighter: #003153;
+  --secondary: #5483b3;
+  --secondary-lighter: #7da0ca;
+  --accent: #c1e8ff;
+  --background: #000;
+}
+
+html {
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
