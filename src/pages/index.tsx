@@ -1,15 +1,19 @@
-import * as React from "react";
+import React from "react";
 import type { HeadFC, PageProps } from "gatsby";
-import { Navbar } from "../components";
+import { BestDisplay, Navbar, Image } from "../components";
 
 const IndexPage: React.FC<PageProps> = () => {
   return (
     <main>
-      <Navbar name="something" />
+      <Navbar />
+      <div className="relative w-full">
+        <Image fileName="hero1920.png" className="absolute w-full min-h-[730px] " />
+      </div>
+      <BestDisplay />
     </main>
   );
 };
 
 export default IndexPage;
 
-export const Head: HeadFC = () => <title>Home</title>;
+export const Head: HeadFC = () => <title>HomePage</title>;

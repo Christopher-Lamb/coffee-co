@@ -17,10 +17,9 @@ interface QueryResult {
 
 interface ImageProps extends ImgHTMLAttributes<HTMLImageElement> {
   fileName: string;
-  alt: string;
 }
 
-const Image: React.FC<ImageProps> = ({ className, fileName, alt }) => {
+const Image: React.FC<ImageProps> = ({ className, fileName }) => {
   // const image = getImage(imageData);
   const data: QueryResult = useStaticQuery(graphql`
     query {
@@ -40,9 +39,9 @@ const Image: React.FC<ImageProps> = ({ className, fileName, alt }) => {
   });
   const image = imageNode ? getImage(imageNode.childImageSharp.gatsbyImageData) : null;
   return image ? (
-    <GatsbyImage image={image} alt={`Image for ${fileName}`} className={"h-full " + className} />
+    <GatsbyImage image={image} alt={`Image for ${fileName}`} className={"h-fulls " + className} />
   ) : (
-    <StaticImage src={"../images/placeholder.jpg"} alt={`Placeholder`} className={"h-full " + className} />
+    <StaticImage src={"../images/placeholder.jpg"} alt={`Placeholder`} className={"h-fulls " + className} />
   );
   // <div className={`w-full h-[${height}px] lg:h-full overflow-hidden flex justify-center`}>{image ? <GatsbyImage image={image} alt={`Image for ${fileName}`} /> : <div>No image found</div>}</div>
 };
