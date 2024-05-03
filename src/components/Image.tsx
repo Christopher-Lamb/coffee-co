@@ -41,7 +41,7 @@ const Image: React.FC<ImageProps> = ({ className, fileName }) => {
   return image ? (
     <GatsbyImage image={image} alt={`Image for ${fileName}`} className={"h-fulls " + className} />
   ) : (
-    <StaticImage src={"../images/placeholder.jpg"} alt={`Placeholder`} className={"h-fulls " + className} />
+    <StaticImage src={"../images/placeholder.jpeg"} alt={`Placeholder`} className={"h-fulls " + className} />
   );
   // <div className={`w-full h-[${height}px] lg:h-full overflow-hidden flex justify-center`}>{image ? <GatsbyImage image={image} alt={`Image for ${fileName}`} /> : <div>No image found</div>}</div>
 };

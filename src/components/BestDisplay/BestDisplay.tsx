@@ -20,9 +20,9 @@ const BestDisply: React.FC<BestDisplyProps> = () => {
         Best Seller<span className="hidden md:inline">s</span>
       </h1>
       <div className="flex justify-center mt-small ">
-        <CoffeeDisplay {...Coffees.coffee1} className="w-two hidden md:flex bg-[#f0ebe6] border p-5 rounded shadow-md" />
-        <CoffeeDisplay {...Coffees.coffee1} className="w-two bg-[#f0ebe6] border p-5 scale-110 rounded shadow-md" />
-        <CoffeeDisplay {...Coffees.coffee1} className="w-two hidden md:flex bg-[#f0ebe6] border p-5 rounded shadow-md" />
+        <CoffeeDisplay {...Coffees[0]} className="w-two hidden md:flex bg-[#f0ebe6] border p-5 rounded shadow-md" />
+        <CoffeeDisplay {...Coffees[1]} className="w-two bg-[#f0ebe6] border p-5 scale-110 rounded shadow-md" />
+        <CoffeeDisplay {...Coffees[5]} className="w-two hidden md:flex bg-[#f0ebe6] border p-5 rounded shadow-md" />
       </div>
     </div>
   );

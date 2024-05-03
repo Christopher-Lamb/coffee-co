@@ -35,7 +35,7 @@ const SearchFilter: React.FC<SearchFilterProps> = ({ onClose }) => {
   };
 
   return (
-    <div>
+    <div className="">
       <button onClick={handleClick} className="flex items-center text-primarys font-semibold text-small18 px-2xsmall bg-[#f7f7f7] rounded" title="Filter">
         <RxMixerVertical className="h-small" />
       </button>
@@ -56,12 +56,12 @@ interface Option {
 const filterOptions: Option[] = [
   { type: "price", options: ["Low to High", "High to Low"] },
   { type: "roast", options: ["espresso", "dark", "light", "medium"] },
-  { type: "orgin", options: ["arabic", "ethiopian", "columbian", "indian"] },
+  { type: "origin", options: ["arabic", "ethiopian", "columbian", "indian"] },
 ];
 
 const FilterUI: React.FC<FilterUIProps> = ({ onClose, className }) => {
   return (
-    <div className={`absolute w-full left-0 ${className}`}>
+    <div className={`absolute z-[1] w-full left-0 ${className}`}>
       <div className="max-w-four min-h-three bg-[#f7f7f7] p-xsmall border shadow mx-auto">
         <div className="flex justify-between border-b-[1px]">
           <h1 className="text-large border-b-[1px] mb-4">Filters</h1>

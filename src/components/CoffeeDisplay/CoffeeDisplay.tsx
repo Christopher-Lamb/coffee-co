@@ -3,14 +3,13 @@ import { IoIosStar, IoIosStarHalf, IoIosStarOutline } from "react-icons/io";
 import { Image } from "../";
 
 interface Coffee {
-  id: string;
   rating: number;
   name: string;
   roast: string;
   filename: string;
   notes: string[];
-  price: string;
-  weight: string;
+  price: number;
+  weight: number;
 }
 interface CoffeeDisplayProps extends Coffee {
   className?: string;
