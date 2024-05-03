@@ -23,7 +23,7 @@
   --background: #000;
 }
 
-html,body {
+html {
   overflow-x: hidden;
   scroll-behavior: smooth;
   background-image: url("../images/beans1.jpg");
@@ -31,7 +31,6 @@ html,body {
   background-attachment: fixed; /* Allows the image to move with the scroll */
   background-position: center; /* Centers the image */
   background-repeat: no-repeat; /* Prevents the image from repeating */
-  cursor: url("https://raw.githubusercontent.com/Lisiman/lisiman.…6663ac6a59f3dbfd9301b31/resources/ZEN-Cursor4.svg");
 }
 
 .londrina-solid-thin {
@@ -74,4 +73,8 @@ html,body {
   font-family: "Rosarivo", cursive;
   font-weight: 400;
   font-style: italic;
+}
+
+.rotate-90 {
+  transform: rotate(90deg);
 }

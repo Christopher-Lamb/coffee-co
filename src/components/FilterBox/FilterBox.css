@@ -1,0 +1,33 @@
+.radio-option {
+  padding: 10px 20px; /* Adjust padding as needed */
+  border: 1px solid #ccc; /* Initial border color */
+  color: #474747;
+  background: #e0e0e0;
+  /* border-radius: 5px; Optional for rounded corners */
+  cursor: pointer; /* Makes divs look clickable */
+  transition: background-color 0.3s, border-color 0.3s; /* Smooth transition */
+}
+
+.radio-option.selected {
+  background-color: #964630; /* Selected background color */
+  border-color: #6c3121; /* Selected border color */
+  color: #fff; /* Selected text color */
+}
+.radio-option.selected:hover {
+  background-color: #be5a3e; /* Selected background color */
+  border-color: #6c3121; /* Selected border color */
+  color: #fff; /* Selected text color */
+}
+
+.radio-option:hover {
+  background-color: #e0e0e0; /* Hover effect */
+  border-color: #999; /* Hover border color */
+}
+
+.dropdown-inactive {
+  display: none;
+}
+
+.dropdown-active {
+  display: block;
+}

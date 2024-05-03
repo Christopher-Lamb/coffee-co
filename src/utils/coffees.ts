@@ -12,7 +12,7 @@ interface Coffee {
 export const Coffees: Record<string, Coffee> = {
   coffee1: {
     id: "coffee1",
-    rating: 10,
+    rating: 2,
     name: "hologram",
     roast: "light",
     notes: ["fruity", "milk chocolate", "syrupy"],
