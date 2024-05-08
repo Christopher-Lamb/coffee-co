@@ -27,7 +27,7 @@ const Image: React.FC<ImageProps> = ({ className, fileName }) => {
         nodes {
           relativePath
           childImageSharp {
-            gatsbyImageData(layout: FULL_WIDTH, placeholder: BLURRED, formats: [AUTO, WEBP, AVIF])
+            gatsbyImageData(layout: CONSTRAINED, placeholder: BLURRED, formats: [AUTO, WEBP, AVIF])
           }
         }
       }

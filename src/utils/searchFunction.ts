@@ -1,10 +1,10 @@
 interface Coffee {
-  id: string;
   rating: number;
   name: string;
   roast: string;
   filename: string;
   notes: string[];
+  origin: string;
   price: number;
   weight: number;
 }
@@ -15,8 +15,9 @@ interface CoffeeQuery {
   // Any other filters or parameters can be added here
 }
 
-export function searchCoffees(coffees: Record<string, Coffee>, query: CoffeeQuery): Coffee[] {
+export function sortCoffees(coffees: Coffee[], query: CoffeeQuery): Coffee[] {
   let coffeeArray = Object.values(coffees);
+  if (Object.keys(query).length === 0) return coffees;
 
   // Filter based on query parameters
   if (query.filters) {
@@ -78,10 +79,32 @@ export function paginateArray<T>(array: T[], itemsPerPage: number, currentPage: 
   return array.slice(startIndex, endIndex);
 }
 
-// const result = searchCoffees(Coffees, {
-//   filters: { roast: "dark" },
-//   sort: [
-//     { key: "price", order: "asc" },
-//     { key: "weight", order: "desc" },
-//   ],
-// });
+// Function to convert array to CoffeeQuery
+export function arrayToSearchQuery(array: [string, string][]): any {
+  const query: any = { filters: {}, sort: [] };
+
+  array
+    .filter(([key, value]) => value !== "")
+    .forEach(([key, value]) => {
+      // Assuming all keys should be placed in the filters object
+      if (key !== "price" && key !== "weight" && key !== "rating") {
+        query.filters![key] = value.replaceAll("+", " ");
+      } else {
+        //Make low to highs and high to lows into asc desc and save as a sort arr
+        const formatted_value = value.toLowerCase().replaceAll("+", "");
+
+        query.sort?.push({ key: key, order: formatted_value === "lowtohigh" ? "asc" : "desc" });
+      }
+    });
+  return query;
+}
+
+export function searchCoffees(array: Coffee[], searchTerm: string): Coffee[] {
+  return array
+    .map((item) => ({
+      ...item,
+      rank: item.name.toLowerCase().includes(searchTerm.toLowerCase()) ? item.name.toLowerCase().indexOf(searchTerm.toLowerCase()) : -1,
+    }))
+    .filter((item) => item.rank !== -1)
+    .sort((a, b) => a.rank - b.rank);
+}

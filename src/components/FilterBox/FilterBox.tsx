@@ -55,8 +55,10 @@ interface Option {
 }
 const filterOptions: Option[] = [
   { type: "price", options: ["Low to High", "High to Low"] },
-  { type: "roast", options: ["espresso", "dark", "light", "medium"] },
-  { type: "origin", options: ["arabic", "ethiopian", "columbian", "indian"] },
+  { type: "rating", options: ["Low to High", "High to Low"] },
+  { type: "weight", options: ["Low to High", "High to Low"] },
+  { type: "roast", options: ["dark", "light", "medium"] },
+  { type: "origin", options: ["Ethiopia", "Kenya", "Tanzania", "Uganda", "Brazil", "Colombia", "Costa Rica", "Honduras", "Guatemala", "Peru", "Vietnam", "Indonesia", "India", "Yemen"] },
 ];
 
 const FilterUI: React.FC<FilterUIProps> = ({ onClose, className }) => {
@@ -153,7 +155,7 @@ const Dropdown: React.FC<DropdownProps> = ({ options, type, className, onChange 
   return (
     <div className={className}>
       {options.map((item, i) => (
-        <div key={item + i} className={`radio-option ${selectedOption === item ? "selected" : ""}`} onClick={() => handleOptionClick(item)}>
+        <div key={item + i} className={`radio-option capitalize ${selectedOption === item ? "selected" : ""}`} onClick={() => handleOptionClick(item)}>
           {item}
         </div>
       ))}

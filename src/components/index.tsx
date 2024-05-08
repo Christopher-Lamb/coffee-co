@@ -5,3 +5,4 @@ export { default as BestDisplay } from "./BestDisplay/BestDisplay";
 export { default as CoffeeDisplay } from "./CoffeeDisplay/CoffeeDisplay";
 export { default as SearchBar } from "./SearchBar/SearchBar";
 export { default as FilterBox } from "./FilterBox/FilterBox";
+export { default as Pagination } from "./Pagination/Pagination";

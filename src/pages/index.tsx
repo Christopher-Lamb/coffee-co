@@ -1,37 +1,59 @@
 import React, { useEffect, useState } from "react";
 import type { HeadFC, PageProps } from "gatsby";
-import { BestDisplay, Navbar, Image, SearchBar, FilterBox, CoffeeDisplay } from "../components";
+import { BestDisplay, Navbar, Image, SearchBar, FilterBox, CoffeeDisplay, Pagination } from "../components";
 import { MdClear } from "react-icons/md";
 import { Coffees } from "../utils/coffees";
-
-function clearSpecificSearchParameters(...keys: string[]) {
-  const params = new URLSearchParams(window.location.search);
-
-  // Remove specified parameters
-  keys.forEach((key) => params.delete(key));
-
-  // Update the browser's URL without reloading the page
-  window.history.replaceState({}, "", `${window.location.pathname}?${params.toString()}`);
-}
+import { useCoffeeContext } from "../context/CoffeeContext";
+import { clearSpecificSearchParameters, parseQueryStringToArray } from "../utils/queryFunctions";
+import { arrayToSearchQuery } from "../utils/searchFunction";
+import { getSearchParam, setSearchParam } from "../utils/searchParameters";
 
 const IndexPage: React.FC<PageProps> = () => {
   const [hasFilter, setHasFilter] = useState(false);
+  const { displayedCoffees, setQuery, setPage, pageNum } = useCoffeeContext();
 
   useEffect(() => {
     handleFilter();
+    // Reading the page attribute from the search parameter in the url
+    const page = getSearchParam("page");
+
+    console.log("page:\n\t", page); //console.log => page
+
+    // If it exists we will set the context of page
+    if (page && setPage) {
+      console.log({ page });
+      setPage(parseInt(page));
+    }
+
+    // If it doesnt exist initialize it
+    if (!page) setSearchParam("page", "0", true);
   }, []);
 
   const handleFilter = () => {
+    // Every time we want to trigger a filter event
+
+    // We are rendering the filter clear based on the number of search parameters in the url
     const { size } = new URLSearchParams(window.location.search);
-    if (size === 0) {
+    if (size <= 1) {
       setHasFilter(false);
     } else {
       setHasFilter(true);
     }
+
+    // Getting search parameters and turning it into an array and removing the page parameter
+    const queryArr = parseQueryStringToArray(window.location.search);
+    // Instead of exclusive filter we should use an inclusive filter
+    const limitedQueryArr = queryArr.filter(([key, _]) => key !== "page");
+
+    // Creating our special query for context
+    const query = arrayToSearchQuery(limitedQueryArr);
+    // Sending it to the context
+    if (setQuery) setQuery(query);
   };
 
   const handleClearFilter = () => {
-    clearSpecificSearchParameters("price", "roast", "origin");
+    //Only clears the paramters we want to ≈ Leaving page attr
+    clearSpecificSearchParameters("price", "roast", "origin", "rating", "weight");
     handleFilter();
   };
 
@@ -53,15 +75,17 @@ const IndexPage: React.FC<PageProps> = () => {
           </div>
         )}
       </div>
-      <div className="py-large bg-white flex flex-wrap justify-center gap-4 mt-small">
-        {[...Array(8).keys()].map((i) => (
-          <CoffeeWrapper key={i}>
-            <CoffeeDisplay {...Coffees[118]} />
-          </CoffeeWrapper>
-        ))}
+      <div className="mt-small py-large bg-white">
+        {typeof pageNum === "number" && <Pagination />}
+        <div className="flex flex-wrap mt-small justify-center gap-4">
+          {displayedCoffees?.map((coffee, i) => (
+            <CoffeeWrapper key={i}>
+              <CoffeeDisplay {...coffee} />
+            </CoffeeWrapper>
+          ))}
+        </div>
       </div>
       <div className="mt-three"></div>
-      <button className="glow-button">Glowing Button</button>
       <div className="mt-three"></div>
     </main>
   );
