@@ -108,7 +108,7 @@ html {
   border: 1px solid gray;
   background-color: white;
   width: fit-content;
-  display: flex;
+  display: none;
   flex-direction: column;
 }
 
@@ -123,4 +123,16 @@ html {
 
 .item-even {
   background-color: hsla(0, 0%, 0%, 0.048);
+}
+
+/* For Webkit browsers like Chrome, Safari */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* For Firefox */
+input[type="number"] {
+    -moz-appearance: textfield;
 }

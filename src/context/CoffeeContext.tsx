@@ -26,21 +26,25 @@ interface CoffeeContextProps {
   displayedCoffees: Coffee[];
   setQuery: (query: CoffeeQuery) => void;
   setPage: (pageNum: number) => void;
+  setSearch: (query: string) => void;
   pageNum: number | null;
   totalPages: number;
+  searchQuery: string;
 }
 
 const defaultContextValue: Partial<CoffeeContextProps> = {
   displayedCoffees: undefined,
   setQuery: undefined,
   setPage: undefined,
+  setSearch: undefined,
   pageNum: undefined,
   totalPages: undefined,
+  searchQuery: undefined,
 };
 
 const CoffeeContext = createContext(defaultContextValue);
 
-const numPerPage = 10;
+const numPerPage = 8;
 
 export const CoffeeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [displayedCoffees, setDisplayedCoffees] = useState<Coffee[]>([]);
@@ -48,13 +52,21 @@ export const CoffeeProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [pageNum, setPageNum] = useState<number | null>(null);
   const [totalPages, setTotalPages] = useState(0);
   const [hasInit, setHasInit] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
-  const setCoffees = (query: CoffeeQuery, currentPage: number) => {
-    setPageNum(currentPage);
+  const setCoffees = (query: CoffeeQuery, currentPage: number, search: string) => {
+    //Remove inaccurate coffees
     const filteredCoffee = sortCoffees(Coffees, query);
 
-    const array: Coffee[] = paginateArray(filteredCoffee, numPerPage, currentPage + 1);
-    const pageAmount = Math.ceil(filteredCoffee.length / numPerPage);
+    //Handle Search
+    const searchedCoffees = searchCoffees(filteredCoffee, search);
+
+    //Get relevant coffees for the page
+    const array: Coffee[] = paginateArray(searchedCoffees, numPerPage, currentPage + 1);
+    const pageAmount = Math.ceil(searchedCoffees.length / numPerPage);
+
+    // Handle State Changes
+    setPageNum(currentPage);
     setTotalPages(pageAmount);
     setDisplayedCoffees(array);
   };
@@ -67,15 +79,21 @@ export const CoffeeProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
     // Set Coffee Based on filter
     if (hasInit) {
-      setCoffees(definedQuery, 0);
+      setCoffees(definedQuery, 0, searchQuery);
       setSearchParam("page", "0");
     } else {
-      setCoffees(definedQuery, pageNum || 0);
+      setCoffees(definedQuery, pageNum || 0, searchQuery);
     }
   };
 
   const setPage = (newPageNum: number) => {
-    setCoffees(queryState || {}, newPageNum);
+    setCoffees(queryState || {}, newPageNum, searchQuery);
+  };
+
+  const setSearch = (query: string) => {
+    setSearchQuery(query);
+    setSearchParam("search", query);
+    setCoffees(queryState || {}, 0, query);
   };
 
   useEffect(() => {
@@ -83,7 +101,7 @@ export const CoffeeProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   }, []);
 
   return (
-    <CoffeeContext.Provider value={{ displayedCoffees, setQuery, setPage, pageNum, totalPages }}>
+    <CoffeeContext.Provider value={{ displayedCoffees, setQuery, setPage, setSearch, searchQuery, pageNum, totalPages }}>
       <div className="context-wrapper">
         {displayedCoffees[0] &&
           Object.entries({ "Current Page": pageNum, totalPages, "First Coffee": displayedCoffees[0].name, hasInit, isGay: true, likesMen: true }).map(([key, value], i) => (

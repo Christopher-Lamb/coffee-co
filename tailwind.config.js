@@ -9,6 +9,7 @@ module.exports = {
         secondary: "#964630",
         // "secondary-lighter": "#fff",
         accent: "#E2BAB4",
+        "accent-lighter": "#FFD2CB",
         "white-text": "rgba(255, 255, 255, 0.9)",
       },
       spacing: {

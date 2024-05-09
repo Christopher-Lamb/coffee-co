@@ -10,9 +10,9 @@ const Navbar: React.FC<NavbarProps> = () => {
     <header className="h-med flex bg-primary">
       <div className="flex items-center justify-around max-w-five w-full mx-auto">
         <div aria-hidden></div>
-        <div className="">
+        <a href="/">
           <Image fileName="CoffeeCoLogoNoOutline.png" className="w-[200px]" />
-        </div>
+        </a>
         <div className="relative flex items-center">
           {numCartItems > 0 && (
             <div className="relative">

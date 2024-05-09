@@ -100,11 +100,27 @@ export function arrayToSearchQuery(array: [string, string][]): any {
 }
 
 export function searchCoffees(array: Coffee[], searchTerm: string): Coffee[] {
+  const searchTermLower = searchTerm.toLowerCase();
+  const searchWords = searchTermLower.split(/\s+/); // Splitting the search term into words based on spaces
+
   return array
-    .map((item) => ({
-      ...item,
-      rank: item.name.toLowerCase().includes(searchTerm.toLowerCase()) ? item.name.toLowerCase().indexOf(searchTerm.toLowerCase()) : -1,
-    }))
-    .filter((item) => item.rank !== -1)
-    .sort((a, b) => a.rank - b.rank);
+    .map((item) => {
+      const itemNameLower = item.name.toLowerCase();
+      let rank = Number.MAX_SAFE_INTEGER; // Assign a very high rank for non-matches
+
+      // Check each word in the search term for a match in the item name
+      searchWords.forEach((word) => {
+        const index = itemNameLower.indexOf(word);
+        if (index !== -1) {
+          // Update rank to be the smallest index found (most relevant position)
+          rank = Math.min(rank, index);
+        }
+      });
+
+      return {
+        ...item,
+        rank: rank,
+      };
+    })
+    .sort((a, b) => a.rank - b.rank); // Sort by rank, where non-matches are at the end due to high rank value
 }

@@ -29,7 +29,7 @@ const Pagination: React.FC<PaginationProps> = () => {
         previousLabel={<FaAngleLeft size={"1.4rem"} />}
         pageRangeDisplayed={2}
         initialPage={pageNum || 0}
-        marginPagesDisplayed={0}
+        marginPagesDisplayed={1}
         nextLabel={<FaAngleRight size={"1.4rem"} />}
         breakLabel={
           <div className="h-5 overflow-hidden">

@@ -10,18 +10,15 @@ import { getSearchParam, setSearchParam } from "../utils/searchParameters";
 
 const IndexPage: React.FC<PageProps> = () => {
   const [hasFilter, setHasFilter] = useState(false);
-  const { displayedCoffees, setQuery, setPage, pageNum } = useCoffeeContext();
+  const { displayedCoffees, setQuery, setPage, pageNum, setSearch } = useCoffeeContext();
 
   useEffect(() => {
     handleFilter();
     // Reading the page attribute from the search parameter in the url
     const page = getSearchParam("page");
 
-    console.log("page:\n\t", page); //console.log => page
-
     // If it exists we will set the context of page
     if (page && setPage) {
-      console.log({ page });
       setPage(parseInt(page));
     }
 
@@ -34,7 +31,7 @@ const IndexPage: React.FC<PageProps> = () => {
 
     // We are rendering the filter clear based on the number of search parameters in the url
     const { size } = new URLSearchParams(window.location.search);
-    if (size <= 1) {
+    if (size <= 2) {
       setHasFilter(false);
     } else {
       setHasFilter(true);
@@ -43,7 +40,7 @@ const IndexPage: React.FC<PageProps> = () => {
     // Getting search parameters and turning it into an array and removing the page parameter
     const queryArr = parseQueryStringToArray(window.location.search);
     // Instead of exclusive filter we should use an inclusive filter
-    const limitedQueryArr = queryArr.filter(([key, _]) => key !== "page");
+    const limitedQueryArr = queryArr.filter(([key, _]) => !["page", "search"].includes(key));
 
     // Creating our special query for context
     const query = arrayToSearchQuery(limitedQueryArr);
@@ -64,8 +61,8 @@ const IndexPage: React.FC<PageProps> = () => {
         <Image fileName="hero1920.png" className="absolute w-full min-h-[730px] " />
       </div>
       <BestDisplay />
-      <div className="mt-three flex gap-2xsmall justify-center">
-        <SearchBar onChange={() => {}} />
+      <div className="mt-two xl:mt-three flex gap-2xsmall justify-center">
+        <SearchBar />
         <div title="Filters">
           <FilterBox onClose={handleFilter} />
         </div>
@@ -75,15 +72,31 @@ const IndexPage: React.FC<PageProps> = () => {
           </div>
         )}
       </div>
-      <div className="mt-small py-large bg-white">
-        {typeof pageNum === "number" && <Pagination />}
-        <div className="flex flex-wrap mt-small justify-center gap-4">
+      <div className="mt-small py-large min-h-four bg-white">
+        {typeof pageNum === "number" && displayedCoffees && displayedCoffees.length !== 0 ? (
+          <Pagination />
+        ) : (
+          <a
+            onClick={() => {
+              handleClearFilter();
+              setSearch && setSearch("");
+            }}
+            className="cursor-pointer"
+          >
+            <p className="text-center px-small text-med text-slate-800">
+              <span className="font-bold">Oops!</span> No Coffees here...
+            </p>
+          </a>
+        )}
+
+        <div className="flex flex-wrap my-small max-w-five mx-auto justify-center gap-4">
           {displayedCoffees?.map((coffee, i) => (
             <CoffeeWrapper key={i}>
               <CoffeeDisplay {...coffee} />
             </CoffeeWrapper>
           ))}
         </div>
+        {typeof pageNum === "number" && displayedCoffees && displayedCoffees.length > 5 && <Pagination />}
       </div>
       <div className="mt-three"></div>
       <div className="mt-three"></div>
