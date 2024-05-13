@@ -30,3 +30,7 @@ export const deleteFromCart = (index: number) => {
   cart.splice(index, 1);
   saveCart(cart);
 };
+
+export const clearCart = () => {
+  sessionStorage.setItem("cart", "[]");
+};

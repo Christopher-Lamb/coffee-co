@@ -135,9 +135,9 @@ export const RadioGroup: React.FC<RadioGroupProps> = ({ name, options, className
   return (
     <div className={className}>
       {options.map(({ value, price }, i) => (
-        <div className="h-smalld py-3xsmall px-xsmall">
+        <div key={i} className="h-smalld py-3xsmall px-xsmall">
           <div className={`flex py-[15px] ${i === 0 ? "" : "border-t-[1px] border-[#A0A0A0]"}`}>
-            <input name={name} defaultChecked={i === 0} onChange={() => onChange && onChange(value)} className="cursor-pointer" value={toKebabCase(value)} type="radio" />
+            <input readOnly name={name} defaultChecked={i === 0} onChange={() => onChange && onChange(value)} className="cursor-pointer" value={toKebabCase(value)} type="radio" />
             <div className="flex pl-4 w-full justify-between">
               <span>{value}</span>
               <span className="text-[#333]">{price}</span>

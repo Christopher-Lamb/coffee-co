@@ -11,6 +11,7 @@ import { getSearchParam, setSearchParam } from "../utils/searchParameters";
 const IndexPage: React.FC<PageProps> = () => {
   const [hasFilter, setHasFilter] = useState(false);
   const { displayedCoffees, setQuery, setPage, pageNum, setSearch } = useCoffeeContext();
+  document.documentElement.className = "beans";
 
   useEffect(() => {
     handleFilter();
@@ -114,4 +115,4 @@ const CoffeeWrapper: React.FC<CoffeeWrapperProps> = ({ children }) => {
 
 export default IndexPage;
 
-export const Head: HeadFC = () => <title>HomePage</title>;
+export const Head: HeadFC = () => <title>Coffee Co.</title>;

@@ -4,7 +4,7 @@ import { FieldSet, Form, Input, Select, RadioGroup } from "./";
 interface InformationProps {
   className?: string;
   step: string;
-  onChange?: (email: string, shipto: string) => void;
+  onChange?: (email: string, shipto: string, address: string) => void;
 }
 
 interface ShipTo {
@@ -28,7 +28,7 @@ export const Information: React.FC<InformationProps> = ({ className, step, onCha
 
     const shipToStr = `${address && address.toUpperCase() + ", "}${city && city.toUpperCase() + " "}${state && state.toUpperCase() + " "}${zip ? zip + ", " : ""}${country}`;
 
-    onChange && onChange(email, shipToStr);
+    onChange && onChange(email, shipToStr, address);
   }, [email, shipTo]);
 
   return (
@@ -51,7 +51,7 @@ export const Information: React.FC<InformationProps> = ({ className, step, onCha
           <Input label="Company (optional)" className="col-span-12" placeholder="Coffee Co." />
           <Input label="Address" onChange={(e) => handleShipKey("address", e.target.value)} required className="col-span-12" placeholder="314 Placeholder Ln." />
           <Input label="Apartment, suit, etc. (optional)" className="col-span-12" placeholder="..." />
-          <Input label="City" onChange={(e) => handleShipKey("city", e.target.value)} className="col-span-4" required placeholder="Placeholder City" />
+          <Input label="City" onChange={(e) => handleShipKey("city", e.target.value)} className="col-span-4" required placeholder="City" />
           <Input label="State" onChange={(e) => handleShipKey("state", e.target.value)} className="col-span-4" required placeholder="NY" />
           <Input label="Zip Code" onChange={(e) => handleShipKey("zip", e.target.value)} className="col-span-4" required placeholder="00000" />
           <Input label="Phone" className="col-span-12" required placeholder="000-000-0000" />

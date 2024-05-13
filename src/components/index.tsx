@@ -8,3 +8,5 @@ export { default as FilterBox } from "./FilterBox/FilterBox";
 export { default as Pagination } from "./Pagination/Pagination";
 export { Form, Input, Select, FieldSet, RadioGroup } from "./Form";
 export { Information, Payment, Shipping, BreadCrumbs, CheckoutNav, CheckChangeDisplay } from "./CheckoutComps";
+export { default as OrderSummary } from "./OrderSummary/OrderSummary";
+export { default as PortalOverlay } from "./PortalOverlay";

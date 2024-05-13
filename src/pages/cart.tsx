@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 import type { HeadFC, PageProps } from "gatsby";
-import { Navbar, Form, Input, BreadCrumbs, Payment, Information, Shipping, CheckoutNav, CheckChangeDisplay } from "../components";
+import { Navbar, Form, Input, BreadCrumbs, Payment, Information, Shipping, CheckoutNav, CheckChangeDisplay, OrderSummary, PortalOverlay } from "../components";
 import { MdClose } from "react-icons/md";
-import { getStoredCart, deleteFromCart } from "../utils/cartFunctions";
+import { getStoredCart, deleteFromCart, clearCart } from "../utils/cartFunctions";
 import { Coffees } from "../utils/coffees";
 import { Image } from "../components";
 import { FiMinus } from "react-icons/fi";
 import { IoMdAdd } from "react-icons/io";
 import { useCoffeeContext } from "../context/CoffeeContext";
+import { Helmet } from "react-helmet";
 
 interface Item {
   name: string;
@@ -26,6 +27,8 @@ interface Coffee {
   weight: number;
 }
 
+const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
+
 const shippingOptions: Record<string, number> = { "Ground (2-6 business days)": 0, "3 Day Select (3 business days)": 9, "2nd Day Air (2-3 business days)": 11, "Next Day Air (2 business days)": 21 };
 
 const formatPrice = (num: number) => {
@@ -39,9 +42,9 @@ const formatPrice = (num: number) => {
 const CartPage: React.FC<PageProps> = () => {
   const [cartItems, setCartItems] = useState<Item[]>();
   const [subtotal, setSubTotal] = useState(0);
-  const [storedFormData, setStoredFormData] = useState({ shipTo: "", email: "", shipping: "Ground (2-6 business days)" });
+  const [storedFormData, setStoredFormData] = useState({ shipTo: "", email: "", shipping: "Ground (2-6 business days)", address: "" });
   const [stepState, setStepState] = useState("information");
-  document.documentElement.style.background = "white";
+  const [isOrderSummary, setIsOrderSummary] = useState(false);
 
   const { setCartAmt } = useCoffeeContext();
 
@@ -80,80 +83,107 @@ const CartPage: React.FC<PageProps> = () => {
     setSubTotal(total || 0);
   };
 
+  const handleCloseSummary = () => {
+    //Clear cart
+    clearCart();
+    setCartAmt && setCartAmt(0);
+    window.location.replace("/");
+  };
+
+  const handleChangeStep = (step: string) => {
+    if (step === "confirm") {
+      setIsOrderSummary(true);
+    }
+    setStepState(step);
+  };
+
   return (
-    <main className="pb-three">
-      <button
-        onClick={() => calcSubtotal()}
-        className="text-med px-2xsmall py-2xsmall fixed bg-white rounded bg-blue-600 text-white shadow shadow-blue-700 hover:translate-y-[-1px] hover:shadow-md hover:shadow-blue-700 active:shadow active:shadow-blue-700 active:translate-y-[1px]"
-      >
-        Calc Subtotal
-      </button>
-      <Navbar />
-      <div className="max-w-five w-full min-h-four mx-auto bg-[#f7f7f7] flex">
-        <div className=" w-full flex flex-col justify-between">
-          <div className="h-full">
-            <div className="px-xsmall">
-              <div className="pt-small pb-2xsmall border-b-2">
-                <div className="h-med w-med bg-black mb-3xsmall"></div>
-                <BreadCrumbs value={stepState} onChange={(value) => setStepState(value)} />
+    <>
+      <Helmet>
+        <title>{capitalize(stepState)} | Coffee Co. Cart</title>
+      </Helmet>
+      {isOrderSummary && (
+        <PortalOverlay>
+          <OrderSummary
+            onClose={handleCloseSummary}
+            subtotal={subtotal}
+            shipping={{ value: storedFormData["shipping"], price: shippingOptions[storedFormData["shipping"]] }}
+            items={cartItems || []}
+            address={storedFormData.address}
+          />
+        </PortalOverlay>
+      )}
+      <main className="pb-three">
+        <Navbar />
+        <div className="max-w-five w-full min-h-four mx-auto bg-[#f7f7f7] flex">
+          <div className=" w-full flex flex-col justify-between">
+            <div className="h-full">
+              <div className="px-xsmall">
+                <div className="pt-small pb-2xsmall border-b-2">
+                  <div className="h-med w-med mb-3xsmall">
+                    <Image fileName="beansLogo.png" />
+                  </div>
+                  <BreadCrumbs value={stepState} onChange={(value) => setStepState(value)} />
+                </div>
+              </div>
+              <div>
+                <CheckChangeDisplay stepChange={(step) => setStepState(step)} step={stepState} stored={storedFormData} />
+              </div>
+              {/* <div>{stepMap[stepState]}</div> */}
+              <Information
+                onChange={(email, shipTo, address) => {
+                  handleStoredFormData("email", email);
+                  handleStoredFormData("shipTo", shipTo);
+                  handleStoredFormData("address", address);
+                }}
+                step={stepState}
+              />
+              <Shipping
+                onChange={(shipping) => {
+                  handleStoredFormData("shipping", shipping);
+                }}
+                step={stepState}
+              />
+              <Payment step={stepState} />
+            </div>
+            <div className=" w-full h-large">
+              <CheckoutNav step={stepState} options={["information", "shipping", "payment"]} onChangeStep={handleChangeStep} />
+            </div>
+          </div>
+          <div className=" w-full">
+            <div className=" h-2/3 p-xsmall">
+              <div className="border bg-white flex flex-col gap-2xsmall overflow-y-auto h-full w-full p-2xsmall">
+                {cartItems && cartItems?.length > 0 ? (
+                  cartItems?.map((item, index) => <CartItem key={index} onQuantityChange={handleQuantity} onDelete={handleDelete} {...item} index={index} />)
+                ) : (
+                  <div className="text-center text-gray-600 text-med mt-small">No Coffee Items yet…</div>
+                )}
               </div>
             </div>
-            <div>
-              <CheckChangeDisplay stepChange={(step) => setStepState(step)} step={stepState} stored={storedFormData} />
-            </div>
-            {/* <div>{stepMap[stepState]}</div> */}
-            <Information
-              onChange={(email, shipTo) => {
-                handleStoredFormData("email", email);
-                handleStoredFormData("shipTo", shipTo);
-              }}
-              step={stepState}
-            />
-            <Shipping
-              onChange={(shipping) => {
-                handleStoredFormData("shipping", shipping);
-              }}
-              step={stepState}
-            />
-            <Payment step={stepState} />
-          </div>
-          <div className=" w-full h-large">
-            <CheckoutNav step={stepState} options={["information", "shipping", "payment"]} onChangeStep={(step) => setStepState(step)} />
-          </div>
-        </div>
-        <div className=" w-full">
-          <div className=" h-2/3 p-xsmall">
-            <div className="border bg-white flex flex-col gap-2xsmall overflow-y-auto h-full w-full p-2xsmall">
-              {cartItems && cartItems?.length > 0 ? (
-                cartItems?.map((item, index) => <CartItem onQuantityChange={handleQuantity} onDelete={handleDelete} {...item} index={index} />)
-              ) : (
-                <div className="text-center text-gray-600 text-med mt-small">No Coffee Items yet…</div>
-              )}
-            </div>
-          </div>
-          <div className="p-xsmall border-t-[1px]">
-            <div className="flex justify-between text-2xl mt-1">
-              <p>Subtotal</p>
-              <p>{formatPrice(subtotal)}</p>
-            </div>
-            {storedFormData.shipping && (
+            <div className="p-xsmall border-t-[1px]">
               <div className="flex justify-between text-2xl mt-1">
-                <p>Shipping</p>
-                <p>{formatPrice(shippingOptions[storedFormData.shipping])}</p>
+                <p>Subtotal</p>
+                <p>{formatPrice(subtotal)}</p>
               </div>
-            )}
-            <div className="flex justify-between text-2xl mt-1">
-              <p>Taxes</p>
-              <p>{formatPrice(subtotal * 0.06625)}</p>
-            </div>
-            <div className="flex justify-between text-3xl mt-2 border-t-[1px] pt-1 border-black">
-              <p>Total</p>
-              <p>{formatPrice(shippingOptions[storedFormData.shipping] + subtotal + subtotal * 0.06625)}</p>
+              {storedFormData.shipping && (
+                <div className="flex justify-between text-2xl mt-1">
+                  <p>Shipping</p>
+                  <p>{formatPrice(shippingOptions[storedFormData.shipping])}</p>
+                </div>
+              )}
+              <div className="flex justify-between text-2xl mt-1">
+                <p>Taxes</p>
+                <p>{formatPrice(subtotal * 0.06625)}</p>
+              </div>
+              <div className="flex justify-between text-3xl mt-2 border-t-[1px] pt-1 border-black">
+                <p>Total</p>
+                <p>{formatPrice(shippingOptions[storedFormData.shipping] + subtotal + subtotal * 0.06625)}</p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </main>
+      </main>
+    </>
   );
 };
 

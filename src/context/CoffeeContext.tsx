@@ -108,21 +108,7 @@ export const CoffeeProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     setCartAmt(cartLength);
   }, []);
 
-  return (
-    <CoffeeContext.Provider value={{ displayedCoffees, setQuery, setPage, setSearch, setCartAmt, searchQuery, pageNum, totalPages, cartAmt }}>
-      <div className="context-wrapper">
-        {displayedCoffees[0] &&
-          Object.entries({ "Current Page": pageNum, totalPages, "First Coffee": displayedCoffees[0].name, hasInit, isGay: true, likesMen: true }).map(([key, value], i) => (
-            <div className={`${i === 0 ? "context-item-1" : "context-item"} ${i % 2 === 0 ? "item-odd" : "item-even"}`}>
-              <span className="context-key">{key}</span>
-              {": "}
-              <span className="context-value">{`${value}`}</span>
-            </div>
-          ))}
-      </div>
-      {children}
-    </CoffeeContext.Provider>
-  );
+  return <CoffeeContext.Provider value={{ displayedCoffees, setQuery, setPage, setSearch, setCartAmt, searchQuery, pageNum, totalPages, cartAmt }}>{children}</CoffeeContext.Provider>;
 };
 
 export const useCoffeeContext = () => useContext(CoffeeContext);
