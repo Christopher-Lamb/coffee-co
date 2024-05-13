@@ -6,3 +6,5 @@ export { default as CoffeeDisplay, Rating } from "./CoffeeDisplay/CoffeeDisplay"
 export { default as SearchBar } from "./SearchBar/SearchBar";
 export { default as FilterBox } from "./FilterBox/FilterBox";
 export { default as Pagination } from "./Pagination/Pagination";
+export { Form, Input, Select, FieldSet, RadioGroup } from "./Form";
+export { Information, Payment, Shipping, BreadCrumbs, CheckoutNav, CheckChangeDisplay } from "./CheckoutComps";

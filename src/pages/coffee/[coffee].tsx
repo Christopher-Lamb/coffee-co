@@ -5,6 +5,19 @@ import { Helmet } from "react-helmet";
 import { Image, Navbar, Rating } from "../../components";
 import { FiMinus } from "react-icons/fi";
 import { IoMdAdd } from "react-icons/io";
+import { addToCart } from "../../utils/cartFunctions";
+import { useCoffeeContext } from "../../context/CoffeeContext";
+
+interface Coffee {
+  rating: number;
+  name: string;
+  roast: string;
+  origin: string;
+  filename: string;
+  notes: string[];
+  price: number;
+  weight: number;
+}
 
 const formatWeight = (num: number) => {
   // return Math.round((num / 16) * 100);
@@ -29,8 +42,9 @@ function caps(str: string): string {
 
 const CoffeePage: React.FC<PageProps> = () => {
   const coffee = window.location.pathname.split("/").slice(2, 3)[0];
-  const [coffeeState, setCoffeeState] = useState<any>({});
+  const [coffeeState, setCoffeeState] = useState<Coffee>();
   const [quantity, setQuantity] = useState(1);
+  const { setCartAmt } = useCoffeeContext();
 
   document.documentElement.style.background = "white";
 
@@ -43,39 +57,46 @@ const CoffeePage: React.FC<PageProps> = () => {
     setQuantity(quant);
   };
 
+  const handleCart = () => {
+    setCartAmt && setCartAmt((prev) => prev + 1);
+    addToCart({ name: coffeeState?.filename || "", quantity: quantity, price: coffeeState?.price || 0 });
+  };
+
   return (
     <main className="pb-three">
       <Helmet>
         <title>
-          {coffeeState.name || ""} | {caps(coffeeState.roast) || ""} | {coffeeState.origin || ""}
+          {coffeeState?.name || ""} | {caps(coffeeState?.roast || "")} | {coffeeState?.origin || ""}
         </title>
       </Helmet>
       <Navbar />
       <div className="flex flex-col lg:flex-row max-w-6xl gap-small mt-med mx-auto rounded lg:border py-med lg:py-0 bg-[#f7f7f7] shadow">
         <div className="mx-auto ">
-          <Image fileName={coffeeState.filename} className="w-three h-three" />
+          <Image fileName={coffeeState?.filename || ""} className="w-three h-three" />
           <div className="max-w-6xl mx-auto">
-            <button className="w-two h-med londrina-solid-light tracking-wide text-med border-4 hover:bg-stone-100 border-primary text-primary ">Add to Cart</button>
+            <button onClick={handleCart} className="w-two h-med londrina-solid-light tracking-wide text-med border-4 hover:bg-stone-100 border-primary text-primary ">
+              Add to Cart
+            </button>
             <button className="w-one h-med londrina-solid-light tracking-wide text-med hover:bg-primary bg-secondary text-accent-lighter">Checkout</button>
           </div>
         </div>
         <div className="max-w-four  w-full mx-auto px-8 md:px-0 lg:mt-small">
           <p className="londrina-solid-light tracking-wide">Coffee Co.</p>
           <h1 className="text-one">
-            {coffeeState.name} <span className="text-4xl text-stone-700">/ {caps(coffeeState.roast)}</span>
+            {coffeeState?.name} <span className="text-4xl text-stone-700">/ {caps(coffeeState?.roast || "")}</span>
           </h1>
           <div className="mt-3xsmall">
             <span className="block leading-[0.8rem] text-stone-700">Origin:</span>
-            <p className="text-med">{coffeeState.origin}</p>
+            <p className="text-med">{coffeeState?.origin}</p>
           </div>
-          {/* <p>Notes: {coffeeState.notes.join(" ")}</p> */}
+          {/* <p>Notes: {coffeeState?.notes.join(" ")}</p> */}
           <div className="mt-3xsmall">
             <span className="block leading-[0.8rem] text-stone-700">Weight:</span>
-            <p>{formatWeight(coffeeState.weight)}</p>
+            <p>{formatWeight(coffeeState?.weight || 0)}</p>
           </div>
-          {coffeeState.rating && (
+          {coffeeState?.rating && (
             <div className="mt-3xsmall">
-              <Rating rating={coffeeState.rating} />
+              <Rating rating={coffeeState?.rating} />
             </div>
           )}
           <div className="mt-xsmall">
@@ -84,7 +105,7 @@ const CoffeePage: React.FC<PageProps> = () => {
           </div>
           <div className="mt-xsmall">
             <span className="block leading-[0.8rem] text-stone-700">Price:</span>
-            <p className="text-med text-bold">{formatPrice(coffeeState.price * quantity)}</p>
+            <p className="text-med text-bold">{formatPrice(coffeeState?.price || 0 * quantity)}</p>
           </div>
         </div>
       </div>

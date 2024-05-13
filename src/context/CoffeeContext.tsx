@@ -1,6 +1,7 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState, useEffect, Dispatch, SetStateAction } from "react";
 import { sortCoffees, paginateArray, searchCoffees } from "../utils/searchFunction";
 import { Coffees } from "../utils/coffees";
+import { getStoredCart } from "../utils/cartFunctions";
 import { setSearchParam } from "../utils/searchParameters";
 
 interface Coffee {
@@ -30,6 +31,8 @@ interface CoffeeContextProps {
   pageNum: number | null;
   totalPages: number;
   searchQuery: string;
+  cartAmt: number;
+  setCartAmt: Dispatch<SetStateAction<number>>;
 }
 
 const defaultContextValue: Partial<CoffeeContextProps> = {
@@ -40,6 +43,8 @@ const defaultContextValue: Partial<CoffeeContextProps> = {
   pageNum: undefined,
   totalPages: undefined,
   searchQuery: undefined,
+  cartAmt: undefined,
+  setCartAmt: undefined,
 };
 
 const CoffeeContext = createContext(defaultContextValue);
@@ -53,6 +58,7 @@ export const CoffeeProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [totalPages, setTotalPages] = useState(0);
   const [hasInit, setHasInit] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [cartAmt, setCartAmt] = useState(0);
 
   const setCoffees = (query: CoffeeQuery, currentPage: number, search: string) => {
     //Remove inaccurate coffees
@@ -98,10 +104,12 @@ export const CoffeeProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
   useEffect(() => {
     // setCoffees();
+    const cartLength = getStoredCart().length;
+    setCartAmt(cartLength);
   }, []);
 
   return (
-    <CoffeeContext.Provider value={{ displayedCoffees, setQuery, setPage, setSearch, searchQuery, pageNum, totalPages }}>
+    <CoffeeContext.Provider value={{ displayedCoffees, setQuery, setPage, setSearch, setCartAmt, searchQuery, pageNum, totalPages, cartAmt }}>
       <div className="context-wrapper">
         {displayedCoffees[0] &&
           Object.entries({ "Current Page": pageNum, totalPages, "First Coffee": displayedCoffees[0].name, hasInit, isGay: true, likesMen: true }).map(([key, value], i) => (
