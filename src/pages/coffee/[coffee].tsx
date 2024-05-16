@@ -1,5 +1,5 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
-import type { HeadFC, PageProps } from "gatsby";
+import { Link, type HeadFC, type PageProps } from "gatsby";
 import { Coffees } from "../../utils/coffees";
 import { Helmet } from "react-helmet";
 import { Image, Navbar, Rating } from "../../components";
@@ -41,11 +41,16 @@ function caps(str: string): string {
 }
 
 const CoffeePage: React.FC<PageProps> = () => {
-  const coffee = window.location.pathname.split("/").slice(2, 3)[0];
+  if (typeof document !== "undefined") document.documentElement.className = "";
+  const coffee =
+    typeof window !== "undefined" &&
+    window.location.pathname
+      .split("/")
+      .filter((i) => i)
+      .pop();
   const [coffeeState, setCoffeeState] = useState<Coffee>();
   const [quantity, setQuantity] = useState(1);
   const { setCartAmt } = useCoffeeContext();
-
 
   useEffect(() => {
     const item = Coffees.find((item) => item.filename === coffee + ".png");
@@ -71,14 +76,14 @@ const CoffeePage: React.FC<PageProps> = () => {
       <Navbar />
       <div className="flex flex-col lg:flex-row max-w-6xl gap-small mt-med mx-auto rounded lg:border py-med lg:py-0 bg-[#f7f7f7] shadow">
         <div className="mx-auto ">
-          <Image fileName={coffeeState?.filename || ""} className="w-three h-three" />
+          <Image fileName={coffeeState?.filename || ""} imgClassName="w-three h-three" />
           <div className="max-w-6xl mx-auto flex">
             <button onClick={handleCart} className="w-two h-med londrina-solid-light tracking-wide text-med border-4 hover:bg-stone-100 border-primary text-primary ">
               Add to Cart
             </button>
-            <a href="/cart" className="w-one flex items-center justify-center block h-med londrina-solid-light tracking-wide text-med hover:bg-primary bg-secondary text-accent-lighter">
+            <Link to="/cart" className="w-one flex items-center justify-center block h-med londrina-solid-light tracking-wide text-med hover:bg-primary bg-secondary text-accent-lighter">
               Checkout
-            </a>
+            </Link>
           </div>
         </div>
         <div className="max-w-four  w-full mx-auto px-8 md:px-0 lg:mt-small">

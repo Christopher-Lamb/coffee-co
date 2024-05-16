@@ -17,9 +17,11 @@ interface QueryResult {
 
 interface ImageProps extends ImgHTMLAttributes<HTMLImageElement> {
   fileName: string;
+  containerClassName?: string;
+  imgClassName?: string;
 }
 
-const Image: React.FC<ImageProps> = ({ className, fileName }) => {
+const Image: React.FC<ImageProps> = ({ imgClassName, containerClassName, fileName }) => {
   // const image = getImage(imageData);
   const data: QueryResult = useStaticQuery(graphql`
     query {
@@ -27,7 +29,7 @@ const Image: React.FC<ImageProps> = ({ className, fileName }) => {
         nodes {
           relativePath
           childImageSharp {
-            gatsbyImageData(layout: CONSTRAINED, placeholder: BLURRED, formats: [AUTO, WEBP, AVIF])
+            gatsbyImageData(layout: CONSTRAINED, placeholder: BLURRED, formats: [AUTO, WEBP])
           }
         }
       }
@@ -39,9 +41,13 @@ const Image: React.FC<ImageProps> = ({ className, fileName }) => {
   });
   const image = imageNode ? getImage(imageNode.childImageSharp.gatsbyImageData) : null;
   return image ? (
-    <GatsbyImage image={image} alt={`Image for ${fileName}`} className={"h-fulls " + className} />
+    <div className={containerClassName}>
+      <GatsbyImage image={image} alt={`Image for ${fileName}`} className={imgClassName} />
+    </div>
   ) : (
-    <StaticImage src={"../images/placeholder.jpeg"} alt={`Placeholder`} className={"h-fulls " + className} />
+    <div className={containerClassName}>
+      <StaticImage src={"../images/placeholder.jpeg"} alt={`Placeholder`} className={imgClassName} />
+    </div>
   );
   // <div className={`w-full h-[${height}px] lg:h-full overflow-hidden flex justify-center`}>{image ? <GatsbyImage image={image} alt={`Image for ${fileName}`} /> : <div>No image found</div>}</div>
 };

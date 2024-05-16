@@ -11,7 +11,7 @@ import { getSearchParam, setSearchParam } from "../utils/searchParameters";
 const IndexPage: React.FC<PageProps> = () => {
   const [hasFilter, setHasFilter] = useState(false);
   const { displayedCoffees, setQuery, setPage, pageNum, setSearch } = useCoffeeContext();
-  document.documentElement.className = "beans";
+  if (typeof document !== "undefined") document.documentElement.className = "beans";
 
   useEffect(() => {
     handleFilter();
@@ -59,7 +59,7 @@ const IndexPage: React.FC<PageProps> = () => {
     <main>
       <Navbar />
       <div className="relative w-full">
-        <Image fileName="hero1920.png" className="absolute w-full min-h-[730px] " />
+        <Image fileName="hero1920.png" containerClassName="absolute" imgClassName="min-h-[730px]" />
       </div>
       <BestDisplay />
       <div className="mt-two xl:mt-three flex gap-2xsmall justify-center">

@@ -33,6 +33,7 @@ html.beans {
   background-repeat: no-repeat; /* Prevents the image from repeating */
 }
 
+
 .londrina-solid-thin {
   font-family: "Londrina Solid", sans-serif;
   font-weight: 100;
@@ -89,4 +90,10 @@ input[type="number"]::-webkit-outer-spin-button {
 /* For Firefox */
 input[type="number"] {
   -moz-appearance: textfield;
+}
+
+.hero-bg{
+  position: absolute;
+  width: 100%;
+  /* min-height: 45.625rem; */
 }

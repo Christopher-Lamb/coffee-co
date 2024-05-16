@@ -152,7 +152,7 @@ const CartPage: React.FC<PageProps> = () => {
           </div>
           <div className=" w-full">
             <div className=" h-2/3 p-xsmall">
-              <div className="border bg-white flex flex-col gap-2xsmall overflow-y-auto h-full w-full p-2xsmall">
+              <div className="border bg-white flex flex-col gap-2xsmall overflow-y-auto max-h-four h-full w-full p-2xsmall">
                 {cartItems && cartItems?.length > 0 ? (
                   cartItems?.map((item, index) => <CartItem key={index} onQuantityChange={handleQuantity} onDelete={handleDelete} {...item} index={index} />)
                 ) : (
@@ -211,7 +211,7 @@ const CartItem: React.FC<CartItemProps> = ({ name, quantity, price, index, onDel
 
   return (
     <div className="h-large w-full flex">
-      <Image fileName={name} className="h-large shrink-0 w-large" />
+      <Image fileName={name} imgClassName="h-large shrink-0 w-large" />
       <div className="flex justify-between w-full">
         <div className="flex flex-col justify-center p-2xsmall">
           <div>

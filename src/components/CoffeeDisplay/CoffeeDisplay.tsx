@@ -1,6 +1,7 @@
 import React from "react";
 import { IoIosStar, IoIosStarHalf, IoIosStarOutline } from "react-icons/io";
 import { Image } from "../";
+import { Link } from "gatsby";
 
 interface Coffee {
   rating: number;
@@ -32,7 +33,7 @@ const formatPrice = (num: number) => {
 const CoffeeDisplay: React.FC<CoffeeDisplayProps> = ({ name, filename, notes, price, rating, roast, weight, className }) => {
   const route = "/coffee/" + filename.replace(".png", "");
   return (
-    <a href={route}>
+    <Link to={route}>
       <div className={"flex flex-col " + className}>
         <div className="w-full h-full bg-white">
           <Image fileName={filename} />
@@ -48,7 +49,7 @@ const CoffeeDisplay: React.FC<CoffeeDisplayProps> = ({ name, filename, notes, pr
         </div>
         <Rating rating={rating} />
       </div>
-    </a>
+    </Link>
   );
 };
 
